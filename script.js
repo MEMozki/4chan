@@ -1,13 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const chatWindow = document.getElementById('chat-window');
+    const statusElement = document.getElementById('status');
     const messageForm = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     
     const ws = new WebSocket('ws://localhost:8080'); // Assuming you have a WebSocket server running at this address
     
-    ws.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        displayMessage(message.text, message.timestamp);
+    ws.onopen = () => {
+        statusElement.textContent = 'Connected';
+        statusElement.style.color = 'green';
+    };
+    
+    ws.onclose = () => {
+        statusElement.textContent = 'Disconnected';
+        statusElement.style.color = 'red';
+    };
+    
+    ws.onerror = () => {
+        statusElement.textContent = 'Error';
+        statusElement.style.color = 'orange';
     };
 
     messageForm.addEventListener('submit', (event) => {
@@ -17,15 +27,4 @@ document.addEventListener('DOMContentLoaded', () => {
         ws.send(JSON.stringify({ text: message, timestamp: timestamp }));
         messageInput.value = '';
     });
-
-    function displayMessage(text, timestamp) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-        messageElement.textContent = text;
-        chatWindow.appendChild(messageElement);
-        
-        setTimeout(() => {
-            chatWindow.removeChild(messageElement);
-        }, 3600000); // 1 hour in milliseconds
-    }
 });
