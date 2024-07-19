@@ -15,13 +15,12 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.chat-window {
-    flex: 1;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    overflow-y: auto;
+.status {
+    margin: 20px;
+    color: green;
 }
 
 .message-form {
